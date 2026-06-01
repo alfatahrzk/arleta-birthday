@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Faura's 17th Chapter ✨</title>
+    <!-- Google Fonts: EB Garamond untuk kesan buku harian klasik & hangat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #faf6f0;       /* Warm ivory */
+            --text-color: #2c2a29;     /* Deep charcoal */
+            --accent-color: #b57c6d;   /* Muted terracotta/rose */
+            --card-bg: #ffffff;
+            --muted: #7a726e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'EB Garamond', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+            position: fixed;
+            width: 100%; height: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Base Typography Overrides */
+        h1, h2, h3, .serif { font-weight: 400; }
+        .sans { font-family: 'Inter', sans-serif; }
+
+        /* Slider Base */
+        .slider-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+        /* 7 slide = 700vw */
+        .slider-track { display: flex; width: 700vw; height: 100%; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        .slide { width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; flex-shrink: 0; padding: 20px; }
+
+        /* Base Card Styling (Diary Style) */
+        .main-card {
+            background: var(--card-bg);
+            width: 88vw; max-width: 340px;
+            height: 72vh; max-height: 530px;
+            padding: 40px 28px;
+            box-shadow: 0 8px 24px rgba(62, 59, 57, 0.03);
+            border-radius: 2px; /* Lebih bersudut tajam seperti kertas kaku */
+            display: flex; flex-direction: column; justify-content: center;
+            position: relative;
+            border: 1px solid #f2ece4;
+        }
+
+        /* Komponen Wadah Scroll Internal */
+        .text-scroll-box {
+            width: 100%;
+            overflow-y: auto;
+            padding-right: 4px;
+            text-align: justify;
+        }
+
+        .text-scroll-box::-webkit-scrollbar { width: 2px; }
+        .text-scroll-box::-webkit-scrollbar-track { background: transparent; }
+        .text-scroll-box::-webkit-scrollbar-thumb { background: var(--accent-color); }
+
+        /* SLIDE 1: COVER */
+        .cover-content { text-align: center; }
+        .cover-content h1 { font-size: 2.8rem; margin-bottom: 12px; line-height: 1.2; }
+        .cover-content p { font-family: 'Inter', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 40px; }
+        .swipe-hint { font-size: 1.05rem; color: var(--accent-color); font-style: italic; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+        /* SLIDE 2: DICTIONARY ENTRY (Observasional & Konkret) */
+        .dict-word { font-size: 2.4rem; margin-bottom: 2px; letter-spacing: -0.5px; }
+        .dict-pronunciation { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-style: italic; color: var(--muted); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .dict-definition { font-size: 1.15rem; line-height: 1.5; margin-bottom: 18px; text-align: justify; }
+        .dict-number { color: var(--accent-color); font-style: italic; margin-right: 6px; font-weight: 500; }
+
+        /* SLIDE 3: TIME-TRAVEL SLIDER (17 Momen Naratif Berbeda) */
+        .time-card { align-items: center; text-align: center; }
+        .time-instruction { font-family: 'Inter', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 15px; }
+        .age-display { font-size: 4.5rem; color: var(--accent-color); line-height: 1; margin-bottom: 5px; transition: all 0.2s; }
+        .age-display.sweet { transform: scale(1.1); font-weight: 600; }
+        .age-slider { -webkit-appearance: none; width: 100%; height: 2px; background: #eae5dd; outline: none; margin: 25px 0; }
+        .age-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent-color); cursor: pointer; }
+        .time-story { font-size: 1.15rem; line-height: 1.5; color: var(--text-color); min-height: 110px; max-height: 110px; overflow-y: auto; text-align: justify; padding: 0 2px; }
+
+        /* SLIDE 4: 17 HAL KECIL TENTANGMU (Intimate & Observant) */
+        .things-title { font-size: 1.5rem; margin-bottom: 15px; text-align: center; font-style: italic; }
+        .things-box { height: 100%; max-height: 360px; }
+        .thing-item { font-size: 1.1rem; line-height: 1.5; margin-bottom: 14px; display: flex; align-items: flex-start; text-align: justify; }
+        .thing-num { color: var(--accent-color); font-style: italic; min-width: 28px; font-weight: 500; }
+
+        /* SLIDE 5: BLUR REVEAL SNAPSHOT */
+        .reveal-container { width: 100%; height: 340px; position: relative; overflow: hidden; border-radius: 1px; cursor: pointer; }
+        .reveal-img { width: 100%; height: 100%; object-fit: cover; filter: sepia(8%); }
+        .reveal-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(255, 254, 252, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; transition: opacity 0.6s ease; }
+        .reveal-overlay.hidden { opacity: 0; pointer-events: none; }
+        .reveal-hint-title { font-size: 1.4rem; margin-bottom: 6px; font-style: italic; }
+        .reveal-hint-sub { font-family: 'Inter', sans-serif; font-size: 0.7rem; text-transform: uppercase; color: var(--muted); letter-spacing: 1px; }
+        .reveal-caption { margin-top: 15px; font-size: 1.1rem; text-align: center; font-style: italic; color: var(--muted); }
+
+        /* SLIDE 6: INTERACTIVE ENVELOPE (Pesan Panjang) */
+        .envelope-text { font-size: 1.1rem; text-align: center; color: var(--muted); font-style: italic; margin-bottom: 25px; }
+        .envelope { width: 110px; height: 75px; background: #e6dfd5; margin: 0 auto; position: relative; border-radius: 2px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.3s; flex-shrink: 0; border: 1px solid #ded6cb; }
+        .envelope::after { content: '✉'; font-size: 1.5rem; color: #9c9284; }
+        .envelope.opened { background: var(--accent-color); border-color: var(--accent-color); transform: scale(0.95); }
+        .envelope.opened::after { content: '❤️'; color: white; font-size: 1.2rem; }
+        
+        .secret-box { max-height: 0; transition: max-height 0.5s ease; }
+        .secret-box.show { max-height: 240px; margin-top: 20px; }
+        .secret-message { font-size: 1.15rem; font-style: italic; opacity: 0; transition: opacity 0.4s ease 0.2s; line-height: 1.6; white-space: pre-line; }
+        .secret-box.show .secret-message { opacity: 1; }
+
+        /* SLIDE 7: THE ANCHOR ROOM & TANDA TANGAN */
+        .anchor-card { align-items: center; text-align: center; }
+        .anchor-title { font-size: 1.6rem; margin-bottom: 10px; font-style: italic; }
+        .anchor-subtitle { font-size: 1.1rem; color: var(--muted); line-height: 1.4; margin-bottom: 25px; }
+        .anchor-btn { width: 55px; height: 55px; border-radius: 50%; background: #fbf9f6; border: 1px solid #eae2d5; font-size: 1.3rem; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); flex-shrink: 0; }
+        .anchor-btn.active { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: rotate(360deg); }
+        
+        .anchor-box { max-height: 0; transition: max-height 0.5s ease; }
+        .anchor-box.show { max-height: 250px; margin-top: 20px; }
+        .anchor-msg { font-size: 1.15rem; line-height: 1.6; font-style: italic; color: var(--text-color); opacity: 0; transition: opacity 0.4s ease 0.2s; white-space: pre-line; text-align: justify; }
+        .anchor-box.show .anchor-msg { opacity: 1; }
+        
+        /* Gaya Tanda Tangan */
+        .signature-area {
+            text-align: right;
+            margin-top: 25px;
+            opacity: 0;
+            transition: opacity 0.4s ease 0.4s;
+            width: 100%;
+            padding-right: 10px;
+        }
+        .anchor-box.show .signature-area { opacity: 1; }
+        .signature-text {
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--accent-color);
+            display: inline-block;
+            border-top: 1px solid #e0d9cf;
+            padding-top: 5px;
+            min-width: 100px;
+        }
+
+        /* Indikator Halaman Kontrol */
+        .controls { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; background: rgba(255, 255, 255, 0.7); padding: 4px 14px; border-radius: 20px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: 1px solid rgba(242, 236, 228, 0.5); }
+        .slide-indicator { font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 2px; color: var(--text-color); }
+    </style>
+</head>
+<body>
+
+    <div class="slider-container" id="sliderContainer">
+        <div class="slider-track" id="sliderTrack">
+            
+            <!-- SLIDE 1: COVER -->
+            <div class="slide">
+                <div class="cover-content">
+                    <h1>Selamat Hari Lahir,<br>Faura.</h1>
+                    <p>A quiet archive for your 17th</p>
+                    <div class="swipe-hint">geser ke kiri untuk membuka halaman ~</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 2: DICTIONARY ENTRY (Observasional & Konkret) -->
+            <div class="slide">
+                <div class="main-card">
+                    <h2 class="dict-word">Faura Arleta</h2>
+                    <div class="dict-pronunciation">/Fau·ra Ar·le·ta/ • nomina</div>
+                    <div class="dict-definition">
+                        <span class="dict-number">1.</span> ngernyitkan dahi saat menghadapi logika berpikir yang rumit.
+                    </div>
+                    <div class="dict-definition">
+                        <span class="dict-number">2.</span> Knyak mengeluh di permukaan.
+                    </div>
+                    <div class="dict-definition">
+                        <span class="dict-number">3.</span> Jiwmuda dan kematangan berpikir yang mulai terbentuk.
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 3: NARRATIVE TIME-TRAVEL SLIDER (17 Momen Eksklusif) -->
+            <div class="slide">
+                <div class="main-card time-card">
+                    <div class="time-instruction">Tarik garis waktu menuju usia 17</div>
+                    <div class="age-display" id="ageDisplay">0</div>
+                    <input type="range" class="age-slider" id="ageSlider" min="0" max="17" value="0">
+                    <div class="time-story" id="timeStory">Titik awal sebuah eksistensi; tangisan pertama yang kelak berubah menjadi tawa penenteram.</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 4: 17 HAL KECIL TENTANGMU (Sangat Intim & Detail) -->
+            <div class="slide">
+                <div class="main-card" style="justify-content: flex-start;">
+                    <h3 class="things-title">17 Hal Kecil</h3>
+                    <div class="text-scroll-box things-box" id="thingsScrollBox">
+                        <!-- Kamu bisa mengubah teks di bawah ini dengan detail yang lebih spesifik -->
+                        <div class="thing-item"><span class="thing-num">01.</span> Catatan belajarmu yang selalu teratur dan rapi menggunakan kode warna tertentu.</div>
+                        <div class="thing-item"><span class="thing-num">02.</span> Caramu mengulang pertanyaan secara runtut untuk memastikan tidak ada logika yang keliru.</div>
+                        <div class="thing-item"><span class="thing-num">03.</span> Gestur dahi yang menyempit setiap kali kamu berhadapan dengan soal logika atau rumus yang sulit.</div>
+                        <div class="thing-item"><span class="thing-num">04.</span> Kebiasaanmu yang tidak pernah lupa mengucapkan terima kasih sekecil apa pun bantuan yang didapat.</div>
+                        <div class="thing-item"><span class="thing-num">05.</span> Caramu mengelola ketenangan diri saat beban tugas sedang menumpuk di waktu yang bersamaan.</div>
+                        <div class="thing-item"><span class="thing-num">06.</span> Ketepatan waktu yang konsisten setiap kali membuat janji untuk memulai sesi diskusi.</div>
+                        <div class="thing-item"><span class="thing-num">07.</span> Caramu menyimak materi dan mendengarkan penjelasan orang lain tanpa pernah menyela.</div>
+                        <div class="thing-item"><span class="thing-num">08.</span> Pilihan diksi kalimatmu saat menulis atau berbicara yang selalu sopan dan tertata baik.</div>
+                        <div class="thing-item"><span class="thing-num">09.</span> Daya tahan belajarmu yang tidak luntur meski harus mengulang topik yang sama beberapa kali.</div>
+                        <div class="thing-item"><span class="thing-num">10.</span> Ketelitianmu menangkap detail-detail kecil yang sering kali dilewati begitu saja oleh orang lain.</div>
+                        <div class="thing-item"><span class="thing-num">11.</span> Helaan napas lega yang khas tepat setelah kamu berhasil memecahkan sebuah problem rumit.</div>
+                        <div class="thing-item"><span class="thing-num">12.</span> Sikap keras kepalamu yang positif; menolak menyerah sebelum menemukan letak eror sebuah sistem.</div>
+                        <div class="thing-item"><span class="thing-num">13.</span> Caramu lebih menghargai proses pemahaman konsep mendalam daripada sekadar nilai akhir.</div>
+                        <div class="thing-item"><span class="thing-num">14.</span> Keberanianmu untuk keluar dari zona nyaman demi mempelajari keahlian baru yang asing.</div>
+                        <div class="thing-item"><span class="thing-num">15.</span> Keterbukaan pikiranmu saat menerima evaluasi, masukan, maupun kritik yang membangun.</div>
+                        <div class="thing-item"><span class="thing-num">16.</span> Caramu membagi fokus dengan adil antara kewajiban akademik dan hal-hal yang kamu gemari.</div>
+                        <div class="thing-item"><span class="thing-num">17.</span> Energi fokus yang selalu menular ke sekitar setiap kali kamu mulai membuka ruang diskusi.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 5: BLUR REVEAL SNAPSHOT -->
+            <div class="slide">
+                <div class="main-card" style="justify-content: flex-start; padding: 25px 20px;">
+                    <div class="reveal-container" id="revealContainer">
+                        <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=500" alt="Core Memory" class="reveal-img">
+                        <div class="reveal-overlay" id="revealOverlay">
+                            <div class="reveal-hint-title">Sebuah Memori</div>
+                            <div class="reveal-hint-sub">Ketuk untuk memperjelas ingatan</div>
+                        </div>
+                    </div>
+                    <div class="reveal-caption">Waktu boleh berjalan, namun rekam jejak pertumbuhanmu tersimpan rapi di sini.</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 6: INTERACTIVE ENVELOPE (Long Text Wadah Surat) -->
+            <div class="slide">
+                <div class="main-card" style="justify-content: flex-start; padding-top: 50px;">
+                    <p class="envelope-text">Ada surat panjang untukmu di dalam sini...</p>
+                    <div class="envelope" id="giftEnvelope"></div>
+                    
+                    <div class="text-scroll-box secret-box" id="secretScrollBox">
+                        <div class="secret-message" id="secretMsg">Faura,
+
+                        Tulis paragraf panjang pertamamu tentang proses belajarnya, apresiasimu terhadap usahanya, atau pesan-pesan mendalam lainnya di sini.
+
+                        Wadah scroll internal ini sanggup menampung teks sepanjang apa pun yang ingin kamu ketik tanpa takut merusak tata letak kartu. Teks akan bergeser ke bawah dengan rapi menggunakan pembatas scroll minimalis.
+
+                        Tulis semua pesan personal yang tulus dan ingin kamu sampaikan padanya di ruang tengah ini. ❤️</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 7: THE ANCHOR ROOM & TANDA TANGAN -->
+            <div class="slide">
+                <div class="main-card anchor-card" style="justify-content: flex-start; padding-top: 50px;">
+                    <h3 class="anchor-title">The Anchor Room</h3>
+                    <p class="anchor-subtitle">Ketuk jangkar di bawah saat dunia luar terasa terlalu bising bagi perjalanan tujuh belas tahunmu.</p>
+                    <button class="anchor-btn" id="anchorBtn">⚓</button>
+                    
+                    <div class="text-scroll-box anchor-box" id="anchorScrollBox">
+                        <div class="anchor-msg" id="anchorMsg">Secepat apa pun dunia luar berputar, dan seberat apa pun proses transisi kedewasaan yang dimulai dari angka 17 ini... ingatlah bahwa ruang digital ini, beserta seluruh apresiasi di dalamnya, akan selalu menetap utuh di sini. Menjadikannya jangkar penenang yang konstan.
+
+                        Selamat merayakan kedewasaan, Faura Arleta. Semoga langkahmu selalu dipenuhi keputusan-keputusan yang berani.</div>
+                        
+                        <!-- Area Tanda Tangan -->
+                        <div class="signature-area">
+                            <span class="signature-text">— Fatah</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- INDIKATOR HALAMAN -->
+        <div class="controls"><span class="slide-indicator" id="slideIndicator">1 / 7</span></div>
+    </div>
+
+    <!-- JAVASCRIPT: Logika Navigasi & Interaksi Modern -->
+    <script>
+        const container = document.getElementById('sliderContainer');
+        const track = document.getElementById('sliderTrack');
+        const indicator = document.getElementById('slideIndicator');
+        
+        let currentIndex = 0;
+        const totalSlides = 7;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        function updateSlider() {
+            track.style.transform = `translateX(-${currentIndex * 100}vw)`;
+            indicator.textContent = `${currentIndex + 1} / ${totalSlides}`;
+        }
+
+        // Navigasi Utama: Swipe HP
+        container.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+        container.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].clientX;
+            const swipeThreshold = 50;
+            if (touchStartX - touchEndX > swipeThreshold && currentIndex < totalSlides - 1) { currentIndex++; updateSlider(); }
+            if (touchEndX - touchStartX > swipeThreshold && currentIndex > 0) { currentIndex--; updateSlider(); }
+        }, { passive: true });
+
+        // Proteksi Scroll Internal: Mencegah slide ter-swipe tidak sengaja saat membaca teks panjang
+        const lockSwipeOnInternalScroll = (el) => {
+            el.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
+            el.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: true });
+            el.addEventListener('touchend', (e) => e.stopPropagation(), { passive: true });
+        };
+        lockSwipeOnInternalScroll(document.getElementById('thingsScrollBox'));
+        lockSwipeOnInternalScroll(document.getElementById('secretScrollBox'));
+        lockSwipeOnInternalScroll(document.getElementById('anchorScrollBox'));
+
+        // --- DATA JALUR NARASI SLIDER (17 MOMEN BERBEDA) ---
+        const ageSlider = document.getElementById('ageSlider');
+        const ageDisplay = document.getElementById('ageDisplay');
+        const timeStory = document.getElementById('timeStory');
+        ageSlider.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
+        ageSlider.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: true });
+        
+        const stories = {
+            0: "Titik awal sebuah eksistensi; tangisan pertama yang kelak berubah menjadi tawa penenteram.",
+            1: "Tahun pertama di bumi. Belajar mengenali wajah-wajah hangat dan mulai meraba lingkungan sekitar.",
+            2: "Langkah-langkah kecil yang goyah namun berani, dipandu rasa penasaran yang besar terhadap isi dunia.",
+            3: "Kata demi kata mulai tersusun menjadi kalimat sederhana, awal dari caramu mengutarakan keinginan.",
+            4: "Masa di mana imajinasi masa kecil mendominasi, mengubah setiap sudut rumah menjadi arena petualangan.",
+            5: "Mulai memegang krayon warna-warni, menorehkannya di atas kertas untuk menggambar dunia pertamamu.",
+            6: "Langkah pertama memasuki gerbang sekolah. Belajar mengeja abjad dan berteman dengan dunia luar.",
+            7: "Mengenal angka dan aturan logika mendasar; pondasi awal dari pola pikirmu yang kelak tumbuh terstruktur.",
+            8: "Menemukan hobi-hobi spesifik yang menarik perhatian, menghabiskan waktu dengan hal yang memicu fokusmu.",
+            9: "Belajar memahami dinamika pertemanan yang lebih luas dan menyadari bahwa setiap kepala punya cerita berbeda.",
+            10: "Menutup satu dekade pertama kehidupan. Mulai menunjukkan tanda-tanda kemandirian berpikir yang kuat.",
+            11: "Rasa ingin tahu tumbuh semakin kritis; gemar mempertanyakan detail cara kerja segala hal di sekeliling.",
+            12: "Masa transisi menuju sekolah menengah, tempat di mana minat belajarmu terhadap ilmu terapan mulai mengakar.",
+            13: "Belajar membagi waktu secara mandiri di tengah tanggung jawab tugas yang perlahan mulai bertambah berat.",
+            14: "Menghadapi kegagalan kecil sebagai sebuah proses evaluasi, membangun ketangguhan mental sejak dini.",
+            15: "Mulai menyusun fondasi cita-cita masa depan, memetakan ambisi dan keinginan dengan pandangan yang lebih terarah.",
+            16: "Setahun penuh proses pendewasaan diri secara senyap; menata mentalitas sebelum melangkah ke gerbang utama.",
+            17: "Hari ini. Sweet Seventeen. Tujuh belas tahun perjalanan tumbuh yang hebat. Gerbang kedewasaan resmi terbuka untukmu, Faura. Dunia siap melihat pembuktian potensimu! ✨🤍"
+        };
+
+        ageSlider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            ageDisplay.textContent = val;
+            if (val === 17) ageDisplay.classList.add('sweet'); else ageDisplay.classList.remove('sweet');
+            timeStory.textContent = stories[val];
+        });
+
+        // --- INTERAKSI SLIDE 5: BLUR REVEAL ---
+        const revealContainer = document.getElementById('revealContainer');
+        const revealOverlay = document.getElementById('revealOverlay');
+        revealContainer.addEventListener('click', () => { revealOverlay.classList.toggle('hidden'); });
+
+        // --- INTERAKSI SLIDE 6: ENVELOPE ---
+        const envelope = document.getElementById('giftEnvelope');
+        const secretScrollBox = document.getElementById('secretScrollBox');
+        envelope.addEventListener('click', () => { envelope.classList.toggle('opened'); secretScrollBox.classList.toggle('show'); });
+
+        // --- INTERAKSI SLIDE 7: ANCHOR ---
+        const anchorBtn = document.getElementById('anchorBtn');
+        const anchorScrollBox = document.getElementById('anchorScrollBox');
+        anchorBtn.addEventListener('click', () => { anchorBtn.classList.toggle('active'); anchorScrollBox.classList.toggle('show'); });
+
+        // Dukungan Navigasi Keyboard Panah (Laptop Testing)
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentIndex < totalSlides - 1) { currentIndex++; updateSlider(); }
+            else if (e.key === 'ArrowLeft' && currentIndex > 0) { currentIndex--; updateSlider(); }
+        });
+    </script>
+</body>
+</html>
