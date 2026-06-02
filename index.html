@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Arleta 17th E-Scrapbook ✨</title>
+    <title>Arleta 17th ✨</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -135,6 +135,10 @@
 </head>
 <body>
 
+    <!-- ELEMEN AUDIO -->
+    <!-- Ganti isi src dengan URL atau file lokal lagumu, contoh: src="lagu.mp3" -->
+    <audio id="bgMusic" src="arleta-song.mpeg" loop></audio>
+
     <div class="slider-container" id="sliderContainer">
         <div class="slider-track" id="sliderTrack">
             
@@ -257,22 +261,42 @@
         const container = document.getElementById('sliderContainer');
         const track = document.getElementById('sliderTrack');
         const indicator = document.getElementById('slideIndicator');
+        const bgMusic = document.getElementById('bgMusic');
         
         let currentIndex = 0;
         const totalSlides = 7;
         let touchStartX = 0;
         let touchEndX = 0;
+        let musicStarted = false; // Penanda untuk audio
 
         function updateSlider() {
             track.style.transform = `translateX(-${currentIndex * 100}vw)`;
             indicator.textContent = `${currentIndex + 1} / ${totalSlides}`;
         }
 
+        // FUNGSI BARU: Inisialisasi Audio Pintar yang langsung dieksekusi begitu ada sentuhan pertama sekecil apa pun di seluruh area dokumen
+        function initAudioOnFirstInteraction() {
+            if (!musicStarted) {
+                bgMusic.play().catch(err => console.log("Auto-play diblokir browser:", err));
+                musicStarted = true;
+                // Bersihkan event listener setelah jalan agar tidak berat
+                document.removeEventListener('touchstart', initAudioOnFirstInteraction);
+                document.removeEventListener('click', initAudioOnFirstInteraction);
+                document.removeEventListener('keydown', initAudioOnFirstInteraction);
+            }
+        }
+
+        // Panggil fungsi musik dengan event global (menangkap gesture sekecil apa pun)
+        document.addEventListener('touchstart', initAudioOnFirstInteraction, { passive: true });
+        document.addEventListener('click', initAudioOnFirstInteraction);
+        document.addEventListener('keydown', initAudioOnFirstInteraction);
+
         // Navigasi Utama: Swipe HP
         container.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
         container.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].clientX;
             const swipeThreshold = 50;
+
             if (touchStartX - touchEndX > swipeThreshold && currentIndex < totalSlides - 1) { currentIndex++; updateSlider(); }
             if (touchEndX - touchStartX > swipeThreshold && currentIndex > 0) { currentIndex--; updateSlider(); }
         }, { passive: true });
@@ -287,12 +311,11 @@
         lockSwipeOnInternalInteraction(document.getElementById('secretScrollBox'));
         lockSwipeOnInternalInteraction(document.getElementById('anchorScrollBox'));
         
-        // --- DATA JALUR NARASI SLIDER (BUG FIXED) ---
+        // --- DATA JALUR NARASI SLIDER ---
         const ageSlider = document.getElementById('ageSlider');
         const ageDisplay = document.getElementById('ageDisplay');
         const timeStory = document.getElementById('timeStory');
         
-        // Memastikan gesture pada slider dikunci sehingga halaman tidak ikut bergeser
         lockSwipeOnInternalInteraction(ageSlider);
         
         const stories = {
